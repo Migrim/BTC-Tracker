@@ -181,15 +181,24 @@
                         tension: 0.3, 
                         fill: true, 
                         pointRadius: 0, 
-                        pointHoverRadius: 0 
+                        pointHoverRadius: 2 
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true, 
+                    maintainAspectRatio: true,
                     aspectRatio: 3,
                     plugins: {
                         legend: { display: false },
+                        tooltip: {
+                            enabled: true,
+                            callbacks: {
+                                label: function(context) {
+                                    let value = context.raw;
+                                    return `€${value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                                }
+                            }
+                        }
                     },
                     scales: {
                         x: {
@@ -200,8 +209,22 @@
                             display: false, 
                             grid: { display: false } 
                         }
+                    },
+                    hover: {
+                        mode: 'nearest', 
+                        intersect: true
                     }
                 }
+            });
+
+            const card = document.querySelector('.card');
+            card.addEventListener('mouseenter', () => {
+                btcChart.data.datasets[0].pointRadius = 2;
+                btcChart.update();
+            });
+            card.addEventListener('mouseleave', () => {
+                btcChart.data.datasets[0].pointRadius = 0; 
+                btcChart.update();
             });
         }
 
