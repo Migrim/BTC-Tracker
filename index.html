@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live BTC Price</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Bricolage Grotesque', sans-serif;
             background-color: #f5f5f5;
             background-image: 
                 linear-gradient(to right, rgba(200, 200, 200, 0.2) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(200, 200, 200, 0.2) 1px, transparent 1px);
-            background-size: 70px 70px; /* Adjust grid size */
+            background-size: 70px 70px; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -31,7 +32,7 @@
         }
         #btc-chart {
             width: 100%;
-            height: 100px; /* Fix the height of the chart */
+            height: 100px; 
         }
         .card h1 {
             margin: 0;
@@ -43,9 +44,10 @@
             margin: 10px 0;
             font-size: 1.5rem;
             color: #666;
-            display: flex; /* To align spans inline */
+            display: flex; 
             justify-content: center;
-            perspective: 1000px; /* Increased perspective for better effect */
+            perspective: 1000px; 
+            font-family: 'Roboto', sans-serif;
         }
         #price span:last-child {
             margin-left: 0px; 
@@ -54,7 +56,7 @@
             display: inline-block;
             transform-style: preserve-3d;
             animation: flip 0.6s ease-in-out;
-            animation-fill-mode: forwards; /* Ensures animation stops at the final state */
+            animation-fill-mode: forwards; 
         }
 
         @keyframes flip {
@@ -85,6 +87,7 @@
         }
 
         .percentage-box {
+            font-family: 'Roboto', sans-serif;
             position: absolute;
             top: 10px;
             right: 10px;
@@ -93,7 +96,7 @@
             font-size: 0.8rem; 
             font-weight: bold;
             color: #fff;
-            background-color: #bbb; /* Neutral background for placeholder */
+            background-color: #bbb; 
         }
 
         .percentage-box.up {
@@ -102,6 +105,14 @@
 
         .percentage-box.down {
             background-color: #f44336;
+        }
+        .explanation-text {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.9rem;
+            color: #555;
+            text-align: right;
         }
     </style>
 </head>
@@ -114,12 +125,16 @@
         <div class="percentage-box" id="percentage-box">0%</div>
         <canvas id="btc-chart" width="300" height="150"></canvas>
     </div>    
-
+    <div class="explanation-text">
+        Price updates every 2 seconds and is live.<br>
+        The graph and percentage reflect the movement of the last week.
+    </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         let lastPrice = 0;
         let lastWeekPrice = 0;
-        let isInitialLoad = true; // Flag to track the initial load
+        let isInitialLoad = true; 
         let btcChart;
 
         async function fetchBTCPrice() {
@@ -150,8 +165,8 @@
 
         async function renderChart() {
             const btcData = await fetchBTCPriceLastWeek();
-            const labels = Object.keys(btcData); // Dates
-            const data = Object.values(btcData); // Prices
+            const labels = Object.keys(btcData); 
+            const data = Object.values(btcData); 
 
             const ctx = document.getElementById('btc-chart').getContext('2d');
             btcChart = new Chart(ctx, {
@@ -160,30 +175,30 @@
                     labels: labels,
                     datasets: [{
                         data: data,
-                        borderColor: 'rgba(247, 147, 26, 1)', // BTC Orange for the line color
-                        backgroundColor: 'rgba(247, 147, 26, 0.2)', // BTC Orange with transparency for the fill color
+                        borderColor: 'rgba(247, 147, 26, 1)', 
+                        backgroundColor: 'rgba(247, 147, 26, 0.2)', 
                         borderWidth: 2,
-                        tension: 0.3, // Smooth curve
-                        fill: true, // Fill below the line
-                        pointRadius: 0, // Remove dots
-                        pointHoverRadius: 0 // Remove hover effect for dots
+                        tension: 0.3, 
+                        fill: true, 
+                        pointRadius: 0, 
+                        pointHoverRadius: 0 
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true, // Ensures the aspect ratio is preserved
+                    maintainAspectRatio: true, 
                     aspectRatio: 3,
                     plugins: {
-                        legend: { display: false }, // Ensure the legend is hidden
+                        legend: { display: false },
                     },
                     scales: {
                         x: {
-                            display: false, // Hide x-axis labels (dates)
-                            grid: { display: false } // Remove x-axis grid lines
+                            display: false, 
+                            grid: { display: false } 
                         },
                         y: {
-                            display: false, // Hide y-axis labels (prices)
-                            grid: { display: false } // Remove y-axis grid lines
+                            display: false, 
+                            grid: { display: false } 
                         }
                     }
                 }
@@ -192,7 +207,6 @@
 
         function animateTextUpdate(element, newText) {
             if (isInitialLoad) {
-                // Skip animation on initial load
                 element.textContent = newText;
                 return;
             }
@@ -200,14 +214,13 @@
             const oldText = element.textContent;
             if (oldText === newText) return;
 
-            // Clear the element and add new spans for each character
             element.innerHTML = '';
             const chars = newText.split('');
             chars.forEach((char, index) => {
                 const span = document.createElement('span');
                 span.textContent = char;
                 span.className = 'char';
-                span.style.animationDelay = `${index * 0.1}s`; // Staggered delay
+                span.style.animationDelay = `${index * 0.1}s`; 
                 element.appendChild(span);
             });
         }
@@ -230,9 +243,9 @@
             const percentageBoxElement = document.getElementById('percentage-box');
 
             if (lastWeekPrice === 0) {
-                percentageBoxElement.textContent = '▲▼ Calc'; // Placeholder text
+                percentageBoxElement.textContent = '▲▼ Calc'; 
                 const btcData = await fetchBTCPriceLastWeek();
-                lastWeekPrice = Object.values(btcData)[0]; // Set the first week's price
+                lastWeekPrice = Object.values(btcData)[0];
                 return;
             }
 
@@ -262,16 +275,14 @@
             setTimeout(() => {
                 element.textContent = newText;
                 element.classList.add('fade');
-            }, 50); // Small delay to apply fade effect
+            }, 50); 
         }
 
-        // Initialize intervals
-        setInterval(updatePrice, 2000); // Update price every 2 seconds
-        setInterval(updatePercentage, 5000); // Update percentage every 5 seconds
+        setInterval(updatePrice, 2000); 
+        setInterval(updatePercentage, 5000); 
 
-        // Perform the first update and set initial load flag
         updatePrice().then(() => {
-            isInitialLoad = false; // Allow animations after the first update
+            isInitialLoad = false; 
         });
         updatePercentage();
         renderChart();
