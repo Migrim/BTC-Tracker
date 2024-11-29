@@ -20,15 +20,34 @@
             height: 100vh;
             margin: 0;
         }
-
+        body.dark-mode {
+            background-color: #181818;
+            background-image: 
+                linear-gradient(to right, rgba(50, 50, 50, 0.2) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(50, 50, 50, 0.2) 1px, transparent 1px);
+            color: #f5f5f5;
+        }
         .card {
             background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 20px;
             padding: 20px;
             text-align: center;
             width: 300px;
             position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.1); 
+        }
+        body.dark-mode .card {
+            background-color: #242424;
+            color: #f5f5f5;
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+        }
+        .toggle-theme {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            user-select: none;
         }
         #btc-chart {
             width: 100%;
@@ -39,7 +58,9 @@
             font-size: 2rem;
             color: #333;
         }
-
+        body.dark-mode .card h1 {
+            color: #f5f5f5;
+        }
         .card p {
             margin: 10px 0;
             font-size: 1.5rem;
@@ -48,6 +69,9 @@
             justify-content: center;
             perspective: 1000px; 
             font-family: 'Roboto', sans-serif;
+        }
+        body.dark-mode .card p {
+            color: #bbb;
         }
         #price span:last-child {
             margin-left: 0px; 
@@ -114,9 +138,13 @@
             color: #555;
             text-align: right;
         }
+        body.dark-mode .explanation-text {
+            color: #aaa;
+        }
     </style>
 </head>
 <body>
+    <div class="toggle-theme">🌙</div>
     <div class="card">
         <h1>BTC Price</h1>
         <p id="price">
@@ -132,6 +160,43 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        const themeToggle = document.querySelector('.toggle-theme');
+        const body = document.body;
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+            } else {
+                body.classList.remove('dark-mode');
+                themeToggle.textContent = '🌙';
+            }
+        }
+
+        function detectSystemTheme() {
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+        }
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            } else {
+                const systemTheme = detectSystemTheme();
+                applyTheme(systemTheme);
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const newTheme = body.classList.contains('dark-mode') ? 'light' : 'dark';
+            applyTheme(newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        initializeTheme();
+
         let lastPrice = 0;
         let lastWeekPrice = 0;
         let isInitialLoad = true; 
