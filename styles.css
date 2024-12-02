@@ -48,6 +48,7 @@ body.dark-mode .card {
     margin: 0;
     font-size: 2rem;
     color: #333;
+    margin-top: 6px;
 }
 body.dark-mode .card h1 {
     color: #f5f5f5;
@@ -131,4 +132,10 @@ body.dark-mode .card p {
 }
 body.dark-mode .explanation-text {
     color: #aaa;
+}
+.btc-logo {
+    width: 24px; 
+    height: 24px;
+    vertical-align: middle; 
+    margin-right: 8px; 
 }
