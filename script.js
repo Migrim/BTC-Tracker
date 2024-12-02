@@ -139,13 +139,20 @@ const body = document.body;
 
         const card = document.querySelector('.card');
         card.addEventListener('mouseenter', () => {
-            btcChart.data.datasets[0].pointRadius = 2;
-            btcChart.update();
+            btcChart.options.maintainAspectRatio = false;
+            if (btcChart.data.datasets[0].pointRadius !== 2) {
+                btcChart.data.datasets[0].pointRadius = 2;
+                btcChart.update();
+            }
         });
+        
         card.addEventListener('mouseleave', () => {
-            btcChart.data.datasets[0].pointRadius = 0; 
-            btcChart.update();
-        });        
+            btcChart.options.maintainAspectRatio = false;
+            if (btcChart.data.datasets[0].pointRadius !== 0) {
+                btcChart.data.datasets[0].pointRadius = 0; 
+                btcChart.update();
+            }
+        });               
     }
 
     function animateTextUpdate(element, newText) {
