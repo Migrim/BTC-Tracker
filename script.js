@@ -42,9 +42,9 @@ const body = document.body;
 
     async function fetchBTCPrice() {
         try {
-            const response = await fetch('https://api.coindesk.com/v1/bpi/currentprice/EUR.json');
+            const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=eur");
             const data = await response.json();
-            return parseFloat(data.bpi.EUR.rate.replace(',', ''));
+            return data.bitcoin.eur;
         } catch (error) {
             console.error("Error fetching BTC price:", error);
             return lastPrice;
@@ -53,9 +53,18 @@ const body = document.body;
 
     async function fetchBTCPriceLastWeek() {
         try {
-            const response = await fetch('https://api.coindesk.com/v1/bpi/historical/close.json?currency=EUR');
+            const response = await fetch("https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=eur&days=7");
             const data = await response.json();
-            return data.bpi;
+    
+            const btcData = {};
+            const timestamps = data.prices;
+    
+            timestamps.forEach(([timestamp, price]) => {
+                const date = new Date(timestamp).toISOString().split("T")[0]; 
+                btcData[date] = price;
+            });
+    
+            return btcData;
         } catch (error) {
             console.error("Error fetching last week's BTC price:", error);
             return {};
@@ -195,7 +204,10 @@ const body = document.body;
         if (lastWeekPrice === 0) {
             percentageBoxElement.textContent = '▲▼ Calc'; 
             const btcData = await fetchBTCPriceLastWeek();
-            lastWeekPrice = Object.values(btcData)[0];
+            
+            if (Object.values(btcData).length > 0) {
+                lastWeekPrice = Object.values(btcData)[0]; 
+            }
             return;
         }
 
